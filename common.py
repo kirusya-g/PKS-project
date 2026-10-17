@@ -61,3 +61,40 @@ class Logger:
             self.f.flush()
             if self.console():
                 print(line)
+
+def ask_ip(prompt, default):
+    while True:
+        s = input(f"{prompt} [{default}]: ").strip() or default
+        try:
+            return str(ipaddress.IPv4Address(s))
+        except ValueError:
+            print("Invalid IPv4 address")
+
+def ask_port(prompt, default):
+    while True:
+        s = input(f"{prompt} [{default}]: ").strip() or str(default)
+        if s.isdigit() and 1 <= int(s) <= 65535:
+            return int(s)
+        print("Port must be 1-65535")
+
+def ask_int(prompt, lo, hi):
+    while True:
+        s = input(f"{prompt} ({lo}-{hi}): ").strip()
+        try:
+            v = int(s)
+            if lo <= v <= hi:
+                return v
+        except ValueError:
+            pass
+        prompt("Invalid value")
+
+def ask_number(prompt, kind, lo, hi):
+    while True:
+        s = input(f"{prompt} ({lo}..{hi}): ").strip().replace(",", ".")
+        try:
+            v = int(s) if kind == "i" else float(s)
+            if lo <= v <= hi:
+                return v
+        except ValueError:
+            pass
+        print("Invalid value")
